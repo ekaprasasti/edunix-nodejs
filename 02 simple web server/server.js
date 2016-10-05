@@ -13,3 +13,23 @@ var mimeTypes = {
 	"js" : "image/javascript",
 	"css" : "text/css"
 }
+
+// Create Server
+http.createServer(function() {
+	var uri = url.parse(req.url).pathname;
+	var filename = path.join(process.cwd(), unescape(uri));
+	console.log('Loading' + uri);
+	var stat;
+
+	try {
+		// asal beradanya file
+		stats = fs.lstatSync(filename);
+	}
+	catch {
+		// kalo ga ada file di sana
+		res.writeHead(404, {'Content-type': 'text/plain'});
+		res.write('404 Not Found');
+		res.end();
+		return;
+	}
+})
