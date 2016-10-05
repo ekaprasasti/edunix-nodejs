@@ -15,7 +15,7 @@ var mimeTypes = {
 }
 
 // Create Server
-http.createServer(function() {
+http.createServer(function(req, res) {
 	var uri = url.parse(req.url).pathname;
 	var fileName = path.join(process.cwd(), unescape(uri));
 	console.log('Loading' + uri);
@@ -25,7 +25,7 @@ http.createServer(function() {
 		// asal beradanya file
 		stats = fs.lstatSync(fileName);
 	}
-	catch {
+	catch(e) {
 		// kalo ga ada file di sana
 		res.writeHead(404, {'Content-type': 'text/plain'});
 		res.write('404 Not Found');
@@ -35,7 +35,7 @@ http.createServer(function() {
 
 	// Check if file/directory
 	if (stats.isFile()) {
-		var mimeTypes = mimeTypes[path.extname(fileName).split(".").reverse()[0]];
+		var mimeType = mimeTypes[path.extname(fileName).split(".").reverse()[0]];
 		res.writeHead(200, {'Content-type': mimeType});
 
 		var fileStream = fs.createReadStream(fileName);
