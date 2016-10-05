@@ -17,13 +17,13 @@ var mimeTypes = {
 // Create Server
 http.createServer(function() {
 	var uri = url.parse(req.url).pathname;
-	var filename = path.join(process.cwd(), unescape(uri));
+	var fileName = path.join(process.cwd(), unescape(uri));
 	console.log('Loading' + uri);
 	var stat;
 
 	try {
 		// asal beradanya file
-		stats = fs.lstatSync(filename);
+		stats = fs.lstatSync(fileName);
 	}
 	catch {
 		// kalo ga ada file di sana
@@ -32,4 +32,36 @@ http.createServer(function() {
 		res.end();
 		return;
 	}
-})
+
+	// Check if file/directory
+	if (stats.isFile()) {
+		var mimeTypes = mimeTypes[path.extname(fileName).split(".").reverse()[0]];
+		res.writeHead(200, {'Content-type': mimeType});
+
+		var fileStream = fs.createReadStream(fileName);
+		fileStream.pipe(res);
+	}
+	else if (stats.isDirectory()) {
+		res.writeHead(302, {
+			'location' : 'index.html'
+		});
+		res.end();
+	}
+	else {
+		res.writeHead(500, {'Content-type' : 'text/plain'});
+		res.write('500 Internal Error');
+		res.end();
+	}
+}).listen(3000);
+
+
+
+
+
+
+
+
+
+
+
+
