@@ -71,6 +71,12 @@ router.post('/users/register', function(req, res, next) {
 			password: password
 			profileimage: profileImageName
 		});
+
+		// Create user
+		User.createUser(newUser, function(err, user){
+			if (err) throw err;
+			console.log(user);
+		});
 	}
 });
 
