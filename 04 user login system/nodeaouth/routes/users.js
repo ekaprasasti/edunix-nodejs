@@ -77,6 +77,12 @@ router.post('/users/register', function(req, res, next) {
 			if (err) throw err;
 			console.log(user);
 		});
+
+		// Success Message
+		req.flash('success', 'You are now registered and may login');
+
+		res.location('/');
+		res.redirect('/');
 	}
 });
 
