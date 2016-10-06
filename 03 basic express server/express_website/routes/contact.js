@@ -12,7 +12,7 @@ router.post('/send', function(req, res, next) {
 		service: 'Gmail',
 		auth: {
 			user: 'dummy.analytic@gmail.com',
-			pass: 'suck3rh4ck'
+			pass: 'insertpasswordhere'
 		}
 	});
 
