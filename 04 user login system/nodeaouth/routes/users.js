@@ -18,7 +18,7 @@ router.get('/login', function(req, res, next) {
   });
 });
 
-router.post('/users/register', function(req, res, next) {
+router.post('/register', function(req, res, next) {
 	// Get form values
 	var name = req.body.name;
 	var email = req.body.email;
@@ -27,7 +27,7 @@ router.post('/users/register', function(req, res, next) {
 	var password2 = req.body.password2;
 
 	// Check for image field
-	if (req.files.profileimage) {
+	if (req.files && req.files.profileimage) {
 		console.log('Uploading File...');
 
 		// File info
@@ -46,12 +46,12 @@ router.post('/users/register', function(req, res, next) {
 	// form validation (express validator)
 	req.checkBody('name', 'Name field is required').notEmpty();
 	req.checkBody('email', 'Email field is required').notEmpty();
-	req.checkBody('email', 'Email not valid').isEmpty();
+	req.checkBody('email', 'Email not valid').isEmail();
 	req.checkBody('password', 'Password field is required').notEmpty();
 	req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
 
 	// check for errors
-	var errors =  req.validateErrors();
+	var errors =  req.validationErrors();
 
 	if (errors) {
 		res.render('register', {
@@ -68,15 +68,15 @@ router.post('/users/register', function(req, res, next) {
 			name: name,
 			email: email,
 			username: username,
-			password: password
+			password: password,
 			profileimage: profileImageName
 		});
 
 		// Create user
-		User.createUser(newUser, function(err, user){
-			if (err) throw err;
-			console.log(user);
-		});
+		// User.createUser(newUser, function(err, user){
+		// 	if (err) throw err;
+		// 	console.log(user);
+		// });
 
 		// Success Message
 		req.flash('success', 'You are now registered and may login');
