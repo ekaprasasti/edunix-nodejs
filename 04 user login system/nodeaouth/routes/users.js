@@ -18,4 +18,13 @@ router.get('/login', function(req, res, next) {
   });
 });
 
+router.post('/users/register', function(req, res, next) {
+	// Get form values
+	var name = req.body.name;
+	var email = req.body.email;
+	var username = req.body.username;
+	var password = req.body.password;
+	var password2 = req.body.password2; 
+});
+
 module.exports = router;
