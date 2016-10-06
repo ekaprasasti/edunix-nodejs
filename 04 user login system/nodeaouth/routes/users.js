@@ -50,6 +50,28 @@ router.post('/users/register', function(req, res, next) {
 	req.checkBody('password', 'Password field is required').notEmpty();
 	req.checkBody('password2', 'Passwords do not match').equals(req.body.password);
 
+	// check for errors
+	var errors =  req.validateErrors();
+
+	if (errors) {
+		res.render('register', {
+			errors: errors,
+			name: name,
+			email: email,
+			username: username,
+			password: password,
+			password2: password2
+		});
+	}
+	else {
+		var newUser = new User({
+			name: name,
+			email: email,
+			username: username,
+			password: password
+			profileimage: profileImageName
+		});
+	}
 });
 
 module.exports = router;
