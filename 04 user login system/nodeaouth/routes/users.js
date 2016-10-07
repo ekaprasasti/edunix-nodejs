@@ -1,5 +1,9 @@
 var express = require('express');
 var router = express.Router();
+var multer = require('multer');
+var upload = multer();
+
+var User = require('../models/user');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -18,7 +22,7 @@ router.get('/login', function(req, res, next) {
   });
 });
 
-router.post('/register', function(req, res, next) {
+router.post('/register', upload.single('profileimage'), function(req, res, next) {
 	// Get form values
 	var name = req.body.name;
 	var email = req.body.email;
@@ -27,16 +31,16 @@ router.post('/register', function(req, res, next) {
 	var password2 = req.body.password2;
 
 	// Check for image field
-	if (req.files && req.files.profileimage) {
+	if (req.file) {
 		console.log('Uploading File...');
 
 		// File info
-		var profileImageOriginalName 	= req.files.profileimage.originalname;
-		var profileImageName 			= req.files.profileimage.name;
-		var profileImageMime			= req.files.profileimage.mimetype;
-		var profileImagePath			= req.files.profileimage.path;
-		var profileImageExt				= req.files.profileimage.extension;
-		var profileImageSize			= req.files.profileimage.size;
+		var profileImageOriginalName 	= req.file.originalname;
+		var profileImageName 			= req.file.name;
+		var profileImageMime			= req.file.mimetype;
+		var profileImagePath			= req.file.path;
+		var profileImageExt				= req.file.extension;
+		var profileImageSize			= req.file.size;
 	}
 	else {
 		// Set default image
@@ -73,10 +77,10 @@ router.post('/register', function(req, res, next) {
 		});
 
 		// Create user
-		// User.createUser(newUser, function(err, user){
-		// 	if (err) throw err;
-		// 	console.log(user);
-		// });
+		User.createUser(newUser, function(err, user){
+			if (err) throw err;
+			console.log(user);
+		});
 
 		// Success Message
 		req.flash('success', 'You are now registered and may login');
