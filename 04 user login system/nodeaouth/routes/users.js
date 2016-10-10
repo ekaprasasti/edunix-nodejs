@@ -101,6 +101,17 @@ passport.use(new LocalStrategy(
 				return done(null, false, {message: 'Unknow User'});
 			}
 		});
+
+		User.comparePassword(password, user.password, function(err, isMatch){
+			if (err) throw err;
+			if (isMatch){
+				return done(null, user);
+			}
+			else {
+				console.log('Invalid Password');
+				return done(null, false, {message:'Invalid Password'});
+			}
+		});
 	}
 ));
 
