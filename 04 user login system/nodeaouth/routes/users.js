@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 var multer = require('multer');
 var upload = multer();
 
@@ -89,6 +91,18 @@ router.post('/register', upload.single('profileimage'), function(req, res, next)
 		res.redirect('/');
 	}
 });
+
+passport.use(new LocalStrategy(
+	function(username, password, done){
+		User.getUserByUsername(username, function(err, user){
+			if (err) throw err;
+			if (!user) {
+				console.log('Unknow User');
+				return done(null, false, {message: 'Unknow User'});
+			}
+		});
+	}
+));
 
 router.post('/login', passport.authenticate('local', {failureRedirect:'users/login', failureFlash:'Invalid username or password'}), function(req, res){
 	console.log('Authentication Successful');
