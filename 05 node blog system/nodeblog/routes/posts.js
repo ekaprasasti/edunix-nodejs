@@ -22,16 +22,53 @@ router.post('/add', upload.single('mainimage'), function(req, res, next){
 		console.log('Uploading File...');
 
 		// File info
-		var profileImageOriginalName 	= req.file.originalname;
-		var profileImageName 			= req.file.name;
-		var profileImageMime			= req.file.mimetype;
-		var profileImagePath			= req.file.path;
-		var profileImageExt				= req.file.extension;
-		var profileImageSize			= req.file.size;
+		var mainImageOriginalName 	= req.file.originalname;
+		var mainImageName 			= req.file.name;
+		var mainImageMime			= req.file.mimetype;
+		var mainImagePath			= req.file.path;
+		var mainImageExt			= req.file.extension;
+		var mainImageSize			= req.file.size;
 	}
 	else {
 		// Set default image
-		var profileImageName = 'noimage.png';
+		var mainImageName = 'noimage.png';
+	}
+
+	// Form validation
+	req.checkBody('title', 'Title field is required').notEmpty();
+	req.checkBody('body', 'Body field is required');
+
+	// Check errors
+	var errors = req.validationErrors();
+
+	if (errors) {
+		res.render('addpost',{
+			"errors": errors,
+			"title": title,
+			"body": body
+		});
+	}
+	else {
+		var posts = db.get('posts');
+
+		// Submit to do
+		posts.insert({
+			"title": title,
+			"body": body,
+			"category": category,
+			"date": date,
+			"author": author,
+			"mainimage": mainimage
+		}, function(err, post){
+			if (err) {
+				res.send('There was an issue submitting the post');
+			}
+			else {
+				req.flash('success', 'Post Submitted');
+				req.location('/');
+				res.redirect('/');
+			}
+		});
 	}
 });
 
