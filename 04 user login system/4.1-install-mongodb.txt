@@ -1,0 +1,24 @@
+1. Install MongoDB: https://docs.mongodb.com/manual/installation/
+
+2. Create db nodeauth, syntax: use nodeauth
+
+3. Create collection users, syntax: db.createCollection('users');
+
+4. Create uers collection data
+syntax:
+db.users.insert({
+	name: "Brad Travesary",
+	email: "brad@techguywebsolutions.com",
+	username: "devuser1",
+	password: "1234"
+})
+
+5. Create another users data (john doe)
+
+Sysntax:
+show dbs : look all db in mongodb
+use db : create new db if not exist
+show collection : check all collection in db we are use
+db.createCollection('collection_name') : create new collection
+db.collection.insert() : insert collection data
+db.collection.update() : edit collection data 

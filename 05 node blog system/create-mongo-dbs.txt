@@ -1,0 +1,8 @@
+Open mongodb in terminal
+
+Create new database nodeblog
+---   use nodeblog   ---
+create collection posts
+---   db.createCollection('posts')   ---
+create collection categories
+---   db.createCollection('categories')   ---

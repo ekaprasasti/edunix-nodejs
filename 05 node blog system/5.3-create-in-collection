@@ -1,0 +1,16 @@
+{
+	"_id" : ObjectId("57fca4b3d66747c2f736f332"),
+	"title" : "Blog Post One",
+	"category" : "Technology",
+	"author" : "Eka Prasasti",
+	"body" : "This is the body",
+	"date" : ISODate("2016-10-11T08:37:07.741Z")
+}
+{
+	"_id" : ObjectId("57fca51ad66747c2f736f333"),
+	"title" : "Blog Post Two",
+	"category" : "Fasion",
+	"author" : "John Doe",
+	"body" : "This is the body for a fashion post",
+	"date" : ISODate("2016-10-11T08:38:50.631Z")
+}
