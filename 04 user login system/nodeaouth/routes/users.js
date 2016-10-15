@@ -92,6 +92,17 @@ router.post('/register', upload.single('profileimage'), function(req, res, next)
 	}
 });
 
+// Session
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.getUserById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
 passport.use(new LocalStrategy(
 	function(username, password, done){
 		User.getUserByUsername(username, function(err, user){
@@ -100,25 +111,31 @@ passport.use(new LocalStrategy(
 				console.log('Unknow User');
 				return done(null, false, {message: 'Unknow User'});
 			}
-		});
 
-		User.comparePassword(password, user.password, function(err, isMatch){
-			if (err) throw err;
-			if (isMatch){
-				return done(null, user);
-			}
-			else {
-				console.log('Invalid Password');
-				return done(null, false, {message:'Invalid Password'});
-			}
+			User.comparePassword(password, user.password, function(err, isMatch){
+				if (err) throw err;
+				if (isMatch) {
+					return done(null, user);
+				}
+				else {
+					console.log('Invalid Password');
+					return done(null, false, {message: 'Invalid Password'});
+				}
+			});
 		});
 	}
 ));
 
-router.post('/login', passport.authenticate('local', {failureRedirect:'users/login', failureFlash:'Invalid username or password'}), function(req, res){
+router.post('/login', passport.authenticate('local', {failureRedirect:'/users/login', failureFlash:'Invalid username or password'}), function(req, res){
 	console.log('Authentication Successful');
 	req.flash('success', 'You are logged in');
-	req.redirect('/');
+	res.redirect('/');
+});
+
+router.get('/logout', function(req, res){
+	req.logout();
+	req.flash('success', 'You have logged out');
+	req.redirect('/users/login');
 });
 
 module.exports = router;
