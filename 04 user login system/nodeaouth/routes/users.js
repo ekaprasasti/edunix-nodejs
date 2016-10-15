@@ -1,9 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var multer = require('multer');
-var upload = multer();
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var multer = require('multer');
+var upload = multer();
 
 var User = require('../models/user');
 
@@ -92,6 +92,17 @@ router.post('/register', upload.single('profileimage'), function(req, res, next)
 	}
 });
 
+// Session
+passport.serializeUser(function(user, done) {
+  done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+  User.getUserById(id, function(err, user) {
+    done(err, user);
+  });
+});
+
 passport.use(new LocalStrategy(
 	function(username, password, done){
 		User.getUserByUsername(username, function(err, user){
@@ -100,6 +111,17 @@ passport.use(new LocalStrategy(
 				console.log('Unknow User');
 				return done(null, false, {message: 'Unknow User'});
 			}
+
+			User.comparePassword(password, user.password, function(err, isMatch){
+				if (err) throw err;
+				if (isMatch) {
+					return done(null, user);
+				}
+				else {
+					console.log('Invalid Password');
+					return done(null, false, {message: 'Invalid Password'});
+				}
+			});
 		});
 	}
 ));
